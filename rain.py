@@ -72,7 +72,6 @@ class Rain():
             new_tear = Tear(font, screen_width, color1, color2)
             self.tears.append(new_tear)
 
-
     def remove_locked_tear(self):
         if self.is_locked_tear():
             if self.tears[self.chosen].word == '':
@@ -118,66 +117,9 @@ display_surface = pygame.display.set_mode((X, Y))
 font = pygame.font.Font('freesansbold.ttf', 20)
 
 
-"""
-N = random.randint(1, 30)
-
-r_str = ''.join(random.choice(string.ascii_uppercase + string.digits)
-                for _ in range(N)).lower()
-"""
-
-"""
-r_str = random.choice(words.words())
-text = font.render(r_str, True, green, blue)
-
-textRect = text.get_rect()
-
-if X - font.size(r_str)[0] > 600:
-    print("EXCEPTION")
-    raise Exception
-
-given_x = random.randint(0, X - font.size(r_str)[0])
-textRect.x = given_x
-textRect.y = 0
-last_y = 0
-"""
-
-
-#t = Tear(font, X, green, blue)
 r = Rain(font, X, green, blue)
 
 while True:
-
-    """
-    text = font.render(r_str, True, green, blue)
-
-    textRect = text.get_rect()
-
-    if X - font.size(r_str)[0] > 600:
-        print("EXCEPTION")
-        raise Exception
-    textRect.x = random.randint(0, X - font.size(r_str)[0])
-    textRect.y = Y // 2
-    """
-
-    """
-    text = font.render(r_str, True, green, blue)
-
-    textRect = text.get_rect()
-
-    textRect.x = given_x
-    textRect.y = last_y
-
-    last_y += 1
-    """
-
-    """
-    t.update_tear(font)
-    t.update_y()
-
-    display_surface.fill(white)
-
-    display_surface.blit(t.text, t.textRect)
-    """
 
     r.add_new_Tear(font, X, green, blue)
     r.update_tears(font)
@@ -187,16 +129,10 @@ while True:
     for event in pygame.event.get():
 
         if event.type == pygame.KEYDOWN:
-            # print(pygame.key.name(event.key))
-            # t.check_char(pygame.key.name(event.key))
             ch = pygame.key.name(event.key)
             r.lock_tear(ch)
             r.update_locked_tear(ch)
             r.remove_locked_tear()
-            """
-            if r_str.startswith(pygame.key.name(event.key)):
-                r_str = r_str[1:]
-            """
 
         if event.type == pygame.QUIT:
 

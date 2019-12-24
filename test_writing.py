@@ -13,19 +13,21 @@ LIST_WORDS = words.words()
 
 class Tear():
 
-    def __init__(self, font, screen_width):
+    def __init__(self, font, screen_width, color1, color2):
         chosen_word = random.choice(LIST_WORDS)
 
         self.x = random.randint(0, screen_width - font.size(chosen_word)[0])
         self.y = 0
+        self.color1 = color1
+        self.color2 = color2
         self.word = chosen_word
-        self.text = font.render()
+        self.text = font.render(self.word, True, self.color1, self.color2)
         self.textRect = self.text.get_rect()
 
     def update_y(self):
         self.y += 1
 
-    def update_tear(self, font, color1, color2):
+    def update_tear(self, font):
         """
             text = font.render(r_str, True, green, blue)
 
@@ -36,7 +38,7 @@ class Tear():
 
         """
 
-        self.text = font.render(self.word, True, color1, color2)
+        self.text = font.render(self.word, True, self.color1, self.color2)
         self.textRect = self.text.get_rect()
 
         self.textRect.x = self.x
@@ -103,6 +105,8 @@ N = random.randint(1, 30)
 r_str = ''.join(random.choice(string.ascii_uppercase + string.digits)
                 for _ in range(N)).lower()
 """
+
+"""
 r_str = random.choice(words.words())
 text = font.render(r_str, True, green, blue)
 
@@ -116,7 +120,9 @@ given_x = random.randint(0, X - font.size(r_str)[0])
 textRect.x = given_x
 textRect.y = 0
 last_y = 0
+"""
 
+t = Tear(font, X, green, blue)
 
 while True:
 
@@ -131,6 +137,8 @@ while True:
     textRect.x = random.randint(0, X - font.size(r_str)[0])
     textRect.y = Y // 2
     """
+
+    """
     text = font.render(r_str, True, green, blue)
 
     textRect = text.get_rect()
@@ -139,17 +147,23 @@ while True:
     textRect.y = last_y
 
     last_y += 1
+    """
+    t.update_tear(font)
+    t.update_y()
 
     display_surface.fill(white)
 
-    display_surface.blit(text, textRect)
+    display_surface.blit(t.text, t.textRect)
 
     for event in pygame.event.get():
 
         if event.type == pygame.KEYDOWN:
             print(pygame.key.name(event.key))
+            t.check_char(pygame.key.name(event.key))
+            """
             if r_str.startswith(pygame.key.name(event.key)):
                 r_str = r_str[1:]
+            """
 
         if event.type == pygame.QUIT:
 

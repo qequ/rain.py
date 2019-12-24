@@ -8,7 +8,7 @@ import nltk
 from nltk.corpus import words
 
 
-LIST_WORDS = words.words()
+LIST_WORDS = list(map(lambda s: s.lower(), words.words()))
 
 
 class Tear():
@@ -55,33 +55,52 @@ class Tear():
             self.word = self.word[1:]
 
 
-# HELPERS --
+class Rain():
 
-def set_position_rectangle(font, rect, max_x, given_str):
-    rect.x = random.randint(0, max_x - font.size(given_str)[0])
+    def __init__(self, font, max_width, color1, color2):
+        self.tears = []
+        self.chosen = -1
+        self.tears.append(Tear(font, max_width, color1, color2))
 
-    """
-    print(X - font.size(r_str)[0])
-    if X - font.size(r_str)[0] > 600:
-        print("EXCEPTION")
-        raise Exception
-    textRect.x = random.randint(0, X - font.size(r_str)[0])
-    textRect.y = Y // 2
-    """
+    def is_locked_tear(self):
+        if self.chosen == -1:
+            return False
+        return True
 
-
-"""
-    chunk of code liberating string
-
-        if event.type == pygame.KEYDOWN:
-            print(pygame.key.name(event.key))
-            if r_str.startswith(pygame.key.name(event.key)):
-                r_str = r_str[1:]
+    def add_new_Tear(self, font, screen_width, color1, color2):
+        if len(self.tears) == 0 or random.random() >= 0.5 and self.tears[-1].y > 100:
+            new_tear = Tear(font, screen_width, color1, color2)
+            self.tears.append(new_tear)
 
 
-"""
+    def remove_locked_tear(self):
+        if self.is_locked_tear():
+            if self.tears[self.chosen].word == '':
+                self.tears.pop(self.chosen)
+                self.chosen = -1
 
-# ENDHELPERS
+    def update_locked_tear(self, char):
+        if self.is_locked_tear():
+            self.tears[self.chosen].check_char(char)
+
+    def lock_tear(self, char):
+        if not self.is_locked_tear():
+            for i in range(len(self.tears)):
+                if self.tears[i].word.startswith(char):
+                    self.chosen = i
+                    break
+
+    def update_tears(self, font):
+        for t in self.tears:
+            t.update_tear(font)
+            t.update_y()
+
+    def render_tears(self, display_surface):
+        """
+        display_surface.blit(t.text, t.textRect)
+        """
+        for t in self.tears:
+            display_surface.blit(t.text, t.textRect)
 
 
 pygame.init()
@@ -122,7 +141,9 @@ textRect.y = 0
 last_y = 0
 """
 
-t = Tear(font, X, green, blue)
+
+#t = Tear(font, X, green, blue)
+r = Rain(font, X, green, blue)
 
 while True:
 
@@ -148,18 +169,30 @@ while True:
 
     last_y += 1
     """
+
+    """
     t.update_tear(font)
     t.update_y()
 
     display_surface.fill(white)
 
     display_surface.blit(t.text, t.textRect)
+    """
+
+    r.add_new_Tear(font, X, green, blue)
+    r.update_tears(font)
+    display_surface.fill(white)
+    r.render_tears(display_surface)
 
     for event in pygame.event.get():
 
         if event.type == pygame.KEYDOWN:
-            print(pygame.key.name(event.key))
-            t.check_char(pygame.key.name(event.key))
+            # print(pygame.key.name(event.key))
+            # t.check_char(pygame.key.name(event.key))
+            ch = pygame.key.name(event.key)
+            r.lock_tear(ch)
+            r.update_locked_tear(ch)
+            r.remove_locked_tear()
             """
             if r_str.startswith(pygame.key.name(event.key)):
                 r_str = r_str[1:]

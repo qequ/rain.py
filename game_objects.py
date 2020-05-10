@@ -8,14 +8,17 @@ LIST_WORDS = list(map(lambda s: s.lower(), words.words()))
 
 class Tear():
 
-    def __init__(self, font, screen_width, color1, color2):
+    def __init__(self, font, screen_width, color1, color2, is_custom_word=False, custom_word=''):
         chosen_word = random.choice(LIST_WORDS)
 
         self.x = random.randint(0, screen_width - font.size(chosen_word)[0])
         self.y = 0
         self.color1 = color1
         self.color2 = color2
-        self.word = chosen_word
+        if custom_word:
+            self.word = custom_word
+        else:
+            self.word = chosen_word
         self.text = font.render(self.word, True, self.color1, self.color2)
         self.textRect = self.text.get_rect()
 
@@ -38,10 +41,12 @@ class Tear():
 
 class Rain():
 
-    def __init__(self, font, max_width, color1, color2):
-        self.tears = []
-        self.chosen = -1
-        self.tears.append(Tear(font, max_width, color1, color2))
+    def __init__(self, font, max_width, color1, color2, custom_list=[], main_menu=False):
+        self.tears = custom_list  # the list of words that is going through the screen
+        self.chosen = -1  # this refers to the word's index position which player is typing
+
+        if not main_menu:
+            self.tears.append(Tear(font, max_width, color1, color2))
 
     def is_locked_tear(self):
         if self.chosen == -1:
@@ -78,4 +83,3 @@ class Rain():
     def render_tears(self, display_surface):
         for t in self.tears:
             display_surface.blit(t.text, t.textRect)
-

@@ -62,7 +62,7 @@ class Rain():
         if self.is_locked_tear():
             if self.tears[self.chosen].word == '':
                 self.tears.pop(self.chosen)
-                self.__score += `1 
+                self.__score += 1 
                 self.chosen = -1
 
     def update_locked_tear(self, char):

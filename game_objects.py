@@ -44,7 +44,7 @@ class Rain():
     def __init__(self, font, max_width, color1, color2, custom_list=[], main_menu=False):
         self.tears = custom_list  # the list of words that is going through the screen
         self.chosen = -1  # this refers to the word's index position which player is typing
-
+        self.__score = 0
         if not main_menu:
             self.tears.append(Tear(font, max_width, color1, color2))
 
@@ -62,6 +62,7 @@ class Rain():
         if self.is_locked_tear():
             if self.tears[self.chosen].word == '':
                 self.tears.pop(self.chosen)
+                self.__score += `1 
                 self.chosen = -1
 
     def update_locked_tear(self, char):
@@ -75,6 +76,9 @@ class Rain():
                     self.chosen = i
                     break
 
+    def return_score(self):
+    	return self.__score
+    
     def update_tears(self, font):
         for t in self.tears:
             t.update_tear(font)

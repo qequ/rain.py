@@ -81,6 +81,11 @@ while True:
     r.update_tears(font)
     display_surface.fill(white)
     r.render_tears(display_surface)
+    a = r.return_score()
+    text = font.render("Score:"+str(a), True, green, blue)
+    textrec = text.get_rect()
+    textrec.center = (X-50 , 15)
+    display_surface.blit(text, textrec)
 
     for event in pygame.event.get():
 
